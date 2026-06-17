@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rechenreise II</title>
+
+<style>
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  font-family:Arial, sans-serif;
+  min-height:100vh;
+  background:linear-gradient(135deg,#e0f7d7,#dff3ff,#ffe1ef);
+  color:#1f2937;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  padding:25px;
+}
+
+.container{
+  width:95%;
+  max-width:1100px;
+  background:white;
+  border-radius:34px;
+  padding:34px;
+  box-shadow:0 18px 45px rgba(0,0,0,.18);
+  text-align:center;
+}
+
+h1{
+  font-size:48px;
+  margin:10px 0;
+  color:#2f4f7f;
+}
+
+.subtitle{
+  font-size:22px;
+  color:#555;
+  margin-bottom:25px;
+}
+
+.mindmap{
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  gap:22px;
+  margin:25px auto;
+  max-width:950px;
+}
+
+.topic{
+  border:none;
+  border-radius:24px;
+  padding:22px;
+  min-height:140px;
+  font-size:19px;
+  cursor:pointer;
+  box-shadow:0 8px 0 rgba(0,0,0,.15);
+  transition:.2s;
+  color:#222;
+  font-weight:bold;
+}
+
+.topic:hover{
+  transform:translateY(-5px);
+}
+
+.green{background:#b9f7a6}
+.purple{background:#dfc7ff}
+.blue{background:#c6ddff}
+.yellow{background:#fff1a8}
+.pink{background:#ffc9df}
+
+.center{
+  grid-column:2;
+  background:#fff6ba;
+  border-radius:50%;
+  min-height:180px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:25px;
+  font-weight:bold;
+  border:5px dashed #333;
+}
+
+.hidden{display:none}
+
+.infoLeiste{
+  display:flex;
+  justify-content:center;
+  gap:14px;
+  flex-wrap:wrap;
+  margin:18px 0;
+}
+
+.info{
+  background:#eef6ff;
+  padding:12px 18px;
+  border-radius:16px;
+  font-weight:bold;
+  font-size:18px;
+}
+
+.fragekarte{
+  background:#fff8df;
+  border:4px solid #ffd166;
+  border-radius:25px;
+  padding:28px;
+  margin-top:25px;
+}
+
+.frage{
+  font-size:28px;
+  line-height:1.45;
+  margin:20px 0;
+}
+
+input{
+  padding:14px;
+  width:80%;
+  max-width:350px;
+  font-size:22px;
+  border-radius:14px;
+  border:3px solid #4b7bec;
+  text-align:center;
+}
+
+button{
+  padding:15px 22px;
+  margin:8px;
+  border:none;
+  border-radius:18px;
+  background:#4b7bec;
+  color:white;
+  font-size:18px;
+  cursor:pointer;
+  box-shadow:0 5px 0 #3867d6;
+}
+
+button:hover{
+  background:#3867d6;
+  transform:translateY(-3px);
+}
+
+.meldung{
+  margin-top:20px;
+  font-size:25px;
+  font-weight:bold;
+  min-height:38px;
+}
+
+.progressBox{
+  width:90%;
+  max-width:600px;
+  height:23px;
+  background:#ddd;
+  border-radius:20px;
+  overflow:hidden;
+  margin:20px auto;
+}
+
+#progress{
+  height:100%;
+  width:0%;
+  background:linear-gradient(90deg,#22c55e,#facc15,#ef4444);
+  transition:.4s;
+}
+
+.answerGrid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:14px;
+  margin-top:15px;
+}
+
+.answerBtn{
+  background:#7c3aed;
+  box-shadow:0 5px 0 #4c1d95;
+  font-size:24px;
+}
+
+svg{
+  max-width:260px;
+  width:90%;
+  margin:10px auto;
+  display:block;
+}
+
+@media(max-width:850px){
+  .mindmap{grid-template-columns:1fr}
+  .center{grid-column:1;border-radius:24px;min-height:auto;padding:25px}
+  h1{font-size:36px}
+  .answerGrid{grid-template-columns:1fr}
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<div id="startseite">
+  <h1>🌟 Rechenreise II 🌟</h1>
+  <p class="subtitle">Lernspiel zu Zahlen und Operationen II</p>
+
+  <div class="mindmap">
+    <button class="topic green" onclick="starteSpiel('grund')">🟢 Grundrechenarten<br><br>Addition, Subtraktion, Multiplikation, Division</button>
+    <div class="center">Zahlen und<br>Operationen II</div>
+    <button class="topic purple" onclick="starteSpiel('brueche')">🟣 Brüche entdecken<br><br>Teile eines Ganzen</button>
+
+    <button class="topic blue" onclick="starteSpiel('english')">🇬🇧 English Math<br><br>Leichte Rechnungen auf Englisch</button>
+    <button class="topic yellow" onclick="starteSpiel('sach')">🌍 Sachunterricht<br><br>Leichte Rechengeschichten</button>
+    <button class="topic pink" onclick="starteSpiel('zahlenraum')">🌸 Erweiterung des Zahlenraums<br><br>Größer oder Runden</button>
+  </div>
+</div>
+
+<div id="spielbereich" class="hidden">
+  <h1 id="titelKategorie">Kategorie</h1>
+
+  <div class="infoLeiste">
+    <div class="info">Aufgabe: <span id="levelAnzeige">1</span></div>
+    <div class="info">⭐ Punkte: <span id="punkteAnzeige">0</span></div>
+    <div class="info">❤️ Leben: <span id="lebenAnzeige">3</span></div>
+  </div>
+
+  <div class="progressBox">
+    <div id="progress"></div>
+  </div>
+
+  <div class="fragekarte">
+    <div id="bildBereich"></div>
+    <div class="frage" id="frageAnzeige"></div>
+
+    <div id="inputBereich">
+      <input type="text" id="antwortFeld" placeholder="Antwort eingeben">
+      <br><br>
+      <button id="checkBtn" onclick="antwortPruefen()">Antwort prüfen</button>
+    </div>
+
+    <div id="wahlBereich" class="answerGrid hidden"></div>
+
+    <div class="meldung" id="meldung"></div>
+  </div>
+
+  <br>
+  <button onclick="neustart()">🏠 Zur Mindmap</button>
+</div>
+
+</div>
+
+<script>
+let aktuelleKategorie = "";
+let aufgabenNummer = 1;
+let punkte = 0;
+let leben = 3;
+let richtigeAntwort = "";
+let modus = "input";
+
+const titel = {
+  grund:"🟢 Grundrechenarten",
+  brueche:"🟣 Brüche entdecken",
+  english:"🇬🇧 English Math",
+  sach:"🌍 Sachunterricht",
+  zahlenraum:"🌸 Erweiterung des Zahlenraums"
+};
+
+function starteSpiel(kategorie){
+  aktuelleKategorie = kategorie;
+  aufgabenNummer = 1;
+  punkte = 0;
+  leben = 3;
+
+  document.getElementById("titelKategorie").textContent = titel[kategorie];
+  document.getElementById("startseite").classList.add("hidden");
+  document.getElementById("spielbereich").classList.remove("hidden");
+
+  neueAufgabe();
+}
+
+function neueAufgabe(){
+  document.getElementById("meldung").textContent = "";
+  document.getElementById("antwortFeld").value = "";
+  document.getElementById("bildBereich").innerHTML = "";
+  document.getElementById("wahlBereich").innerHTML = "";
+  document.getElementById("wahlBereich").classList.add("hidden");
+  document.getElementById("inputBereich").classList.remove("hidden");
+
+  if(aktuelleKategorie === "grund") grundAufgabe();
+  if(aktuelleKategorie === "english") englishAufgabe();
+  if(aktuelleKategorie === "sach") sachAufgabe();
+  if(aktuelleKategorie === "zahlenraum") zahlenraumAufgabe();
+  if(aktuelleKategorie === "brueche") bruchAufgabe();
+
+  updateAnzeige();
+}
+
+function grundAufgabe(){
+  modus = "input";
+  let art = zufallsZahl(1,4);
+  let a,b,frage;
+
+  if(art === 1){
+    a = zufallsZahl(20,120);
+    b = zufallsZahl(10,80);
+    richtigeAntwort = String(a + b);
+    frage = "Addition: Was ist " + a + " + " + b + "?";
+  }else if(art === 2){
+    a = zufallsZahl(60,180);
+    b = zufallsZahl(10,50);
+    richtigeAntwort = String(a - b);
+    frage = "Subtraktion: Was ist " + a + " - " + b + "?";
+  }else if(art === 3){
+    a = zufallsZahl(2,10);
+    b = zufallsZahl(2,10);
+    richtigeAntwort = String(a * b);
+    frage = "Multiplikation: Was ist " + a + " × " + b + "?";
+  }else{
+    b = zufallsZahl(2,10);
+    richtigeAntwort = String(zufallsZahl(2,10));
+    a = b * Number(richtigeAntwort);
+    frage = "Division: Was ist " + a + " ÷ " + b + "?";
+  }
+
+  document.getElementById("frageAnzeige").textContent = frage;
+}
+
+function englishAufgabe(){
+  modus = "input";
+  let art = zufallsZahl(1,4);
+  let a,b,frage;
+
+  if(art === 1){
+    a = zufallsZahl(10,80);
+    b = zufallsZahl(10,60);
+    richtigeAntwort = String(a + b);
+    frage = "Addition: What is " + a + " + " + b + "?";
+  }else if(art === 2){
+    a = zufallsZahl(40,120);
+    b = zufallsZahl(10,40);
+    richtigeAntwort = String(a - b);
+    frage = "Subtraction: What is " + a + " - " + b + "?";
+  }else if(art === 3){
+    a = zufallsZahl(2,10);
+    b = zufallsZahl(2,8);
+    richtigeAntwort = String(a * b);
+    frage = "Multiplication: What is " + a + " × " + b + "?";
+  }else{
+    b = zufallsZahl(2,8);
+    richtigeAntwort = String(zufallsZahl(2,10));
+    a = b * Number(richtigeAntwort);
+    frage = "Division: What is " + a + " ÷ " + b + "?";
+  }
+
+  document.getElementById("frageAnzeige").textContent = frage;
+}
+
+function sachAufgabe(){
+  modus = "input";
+  let art = zufallsZahl(1,6);
+  let frage;
+
+  if(art === 1){
+    let a = zufallsZahl(6,15);
+    let b = zufallsZahl(2,8);
+    richtigeAntwort = String(a - b);
+    frage = "Im Wald werden " + a + " Rehe beobachtet. " + b + " Rehe stehen auf einer Wiese. Wie viele Rehe stehen nicht auf der Wiese?";
+  }else if(art === 2){
+    let a = 7;
+    let b = zufallsZahl(2,5);
+    richtigeAntwort = String(a - b);
+    frage = "Eine Woche hat 7 Tage. An " + b + " Tagen scheint die Sonne. Wie viele Tage scheint die Sonne nicht?";
+  }else if(art === 3){
+    let a = zufallsZahl(6,14);
+    let b = zufallsZahl(1,5);
+    richtigeAntwort = String(a - b);
+    frage = "Im Schulgarten wachsen " + a + " Blumen. " + b + " Blumen sind rot. Wie viele Blumen sind nicht rot?";
+  }else if(art === 4){
+    let a = zufallsZahl(6,14);
+    let b = zufallsZahl(2,6);
+    richtigeAntwort = String(a - b);
+    frage = "Auf dem Schulweg werden " + a + " Fahrzeuge gezählt. " + b + " Fahrzeuge sind Fahrräder. Wie viele Fahrzeuge sind keine Fahrräder?";
+  }else if(art === 5){
+    let a = zufallsZahl(6,12);
+    let b = zufallsZahl(1,5);
+    richtigeAntwort = String(a - b);
+    frage = "Es werden " + a + " Abfälle betrachtet. " + b + " gehören in den Papiermüll. Wie viele gehören nicht in den Papiermüll?";
+  }else{
+    let a = zufallsZahl(8,16);
+    let b = zufallsZahl(2,7);
+    richtigeAntwort = String(a - b);
+    frage = "Die Klasse schaut sich " + a + " Bilder an. " + b + " Bilder zeigen Wasser. Wie viele Bilder zeigen kein Wasser?";
+  }
+
+  document.getElementById("frageAnzeige").textContent = frage;
+}
+
+function zahlenraumAufgabe(){
+  modus = "input";
+  let art = zufallsZahl(1,2);
+  let frage;
+
+  if(art === 1){
+    let a = zufallsZahl(1000,9999);
+    let b = zufallsZahl(1000,9999);
+    while(a === b){ b = zufallsZahl(1000,9999); }
+    richtigeAntwort = String(Math.max(a,b));
+    frage = "Welche Zahl ist größer: " + formatZahl(a) + " oder " + formatZahl(b) + "?";
+  }else{
+    let zahl = zufallsZahl(1000,9999);
+    richtigeAntwort = String(Math.round(zahl / 100) * 100);
+    frage = "Runde " + formatZahl(zahl) + " auf den nächsten Hunderter.";
+  }
+
+  document.getElementById("frageAnzeige").textContent = frage;
+}
+
+function bruchAufgabe(){
+  modus = "wahl";
+  document.getElementById("inputBereich").classList.add("hidden");
+  document.getElementById("wahlBereich").classList.remove("hidden");
+
+  let nennerListe = [2,3,4,5,6];
+  let nenner = nennerListe[zufallsZahl(0,nennerListe.length-1)];
+  let zaehler = zufallsZahl(1,nenner-1);
+  richtigeAntwort = zaehler + "/" + nenner;
+
+  zeichneKreis(zaehler, nenner);
+
+  document.getElementById("frageAnzeige").innerHTML =
+    "Schau dir den Kreis genau an.<br>Der Kreis ist in <b>" + nenner + " gleich große Teile</b> geteilt.<br><b>Welcher Bruch ist rot markiert?</b>";
+
+  let antworten = [richtigeAntwort];
+
+  for(let z=1; z<=nenner; z++){
+    let ant = z + "/" + nenner;
+    if(!antworten.includes(ant)) antworten.push(ant);
+  }
+
+  let extra = ["1/2","1/3","2/3","1/4","2/4","3/4","1/5","2/5","3/5","4/5","1/6","5/6"];
+  extra.sort(() => Math.random() - 0.5);
+  for(let i=0; i<extra.length && antworten.length<4; i++){
+    if(!antworten.includes(extra[i]) && !gleichwertig(extra[i], richtigeAntwort)){
+      antworten.push(extra[i]);
+    }
+  }
+
+  antworten = antworten.slice(0,4);
+  antworten.sort(() => Math.random() - 0.5);
+
+  let html = "";
+  for(let i=0; i<antworten.length; i++){
+    html += "<button class='answerBtn' onclick='wahlPruefen(\"" + antworten[i] + "\")'>" + antworten[i] + "</button>";
+  }
+  document.getElementById("wahlBereich").innerHTML = html;
+}
+
+function zeichneKreis(zaehler, nenner){
+  let cx=130, cy=130, r=110;
+  let svg = "<svg viewBox='0 0 260 260'>";
+  for(let i=0; i<nenner; i++){
+    let start = -90 + (360/nenner)*i;
+    let end = -90 + (360/nenner)*(i+1);
+    let farbe = i < zaehler ? "#e63946" : "#ffffff";
+    svg += kreisStueck(cx,cy,r,start,end,farbe);
+  }
+  svg += "<circle cx='130' cy='130' r='110' fill='none' stroke='#222' stroke-width='5'></circle></svg>";
+  document.getElementById("bildBereich").innerHTML = svg;
+}
+
+function kreisStueck(cx, cy, r, startAngle, endAngle, farbe){
+  let start = punkt(cx,cy,r,endAngle);
+  let end = punkt(cx,cy,r,startAngle);
+  let largeArc = endAngle-startAngle <= 180 ? "0" : "1";
+  return "<path d='M "+cx+" "+cy+" L "+start.x+" "+start.y+" A "+r+" "+r+" 0 "+largeArc+" 0 "+end.x+" "+end.y+" Z' fill='"+farbe+"' stroke='#222' stroke-width='2'></path>";
+}
+
+function punkt(cx,cy,r,angle){
+  let rad = angle*Math.PI/180;
+  return {x:cx+r*Math.cos(rad), y:cy+r*Math.sin(rad)};
+}
+
+function antwortPruefen(){
+  const eingabe = document.getElementById("antwortFeld").value.trim().toLowerCase().replace(/\s/g,"");
+  const richtig = richtigeAntwort.toLowerCase().replace(/\s/g,"");
+  pruefe(eingabe === richtig);
+}
+
+function wahlPruefen(antwort){
+  pruefe(antwort === richtigeAntwort);
+}
+
+function pruefe(istRichtig){
+  const meldung = document.getElementById("meldung");
+
+  if(istRichtig){
+    punkte++;
+    meldung.textContent = "✅ Richtig!";
+    meldung.style.color = "green";
+  }else{
+    leben--;
+    meldung.textContent = "🌟 Noch nicht richtig. Beim nächsten Mal klappt es!";
+    meldung.style.color = "orange";
+  }
+
+  updateAnzeige();
+
+  setTimeout(function(){
+    if(leben <= 0){
+      spielBeenden("Keine Leben mehr. Versuche es nochmal!");
+    }else{
+      aufgabenNummer++;
+      neueAufgabe();
+    }
+  },1400);
+}
+
+function spielBeenden(text){
+  document.getElementById("frageAnzeige").textContent = text;
+  document.getElementById("inputBereich").classList.add("hidden");
+  document.getElementById("wahlBereich").classList.add("hidden");
+  document.getElementById("meldung").textContent = "💪 Zur Mindmap zurück und weiter üben!";
+}
+
+function neustart(){
+  document.getElementById("startseite").classList.remove("hidden");
+  document.getElementById("spielbereich").classList.add("hidden");
+}
+
+function updateAnzeige(){
+  document.getElementById("levelAnzeige").textContent = aufgabenNummer;
+  document.getElementById("punkteAnzeige").textContent = punkte;
+  document.getElementById("lebenAnzeige").textContent = leben;
+
+  let prozent = (punkte % 10) * 10;
+  document.getElementById("progress").style.width = prozent + "%";
+}
+
+function zufallsZahl(min,max){
+  return Math.floor(Math.random()*(max-min+1))+min;
+}
+
+function formatZahl(z){
+  return String(z).replace(/\B(?=(\d{3})+(?!\d))/g," ");
+}
+
+function gleichwertig(bruch1, bruch2){
+  let a=bruch1.split("/");
+  let b=bruch2.split("/");
+  return Number(a[0])*Number(b[1]) === Number(b[0])*Number(a[1]);
+}
+</script>
+
+</body>
+</html>
